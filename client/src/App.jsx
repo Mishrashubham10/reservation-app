@@ -5,6 +5,7 @@ import Hotel from "./pages/hotel/Hotel";
 
 const App = () => {
   return (
+    <>
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<Home />} />
@@ -12,6 +13,7 @@ const App = () => {
       <Route path="/hotels/:id" element={<Hotel />} />
     </Routes>
     </BrowserRouter>
+    </>
   )
 }
 

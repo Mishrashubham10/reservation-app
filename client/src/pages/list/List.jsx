@@ -1,8 +1,13 @@
+import Header from "../../components/header/Header"
+import Navbar from "../../components/navbar/Navbar"
 import "./list.css"
 
 const List = () => {
   return (
-    <div>List</div>
+    <div>
+      <Navbar />
+      <Header type="list" />
+    </div>
   )
 }
 
