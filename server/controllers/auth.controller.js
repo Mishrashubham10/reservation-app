@@ -1,6 +1,7 @@
 import { asyncHandler } from '../utils/asynHandler.js';
 import User from '../models/user.model.js';
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 // REGISTER
 const register = asyncHandler(async (req, res) => {
@@ -31,7 +32,7 @@ const login = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: 'All fields must be filled' });
 
   // find user by username
-  const user = await User.findOne({username});
+  const user = await User.findOne({username}).select("-isAdmin");
 
   if (!user) return res.status(404).json({ message: 'User not found' });
 
