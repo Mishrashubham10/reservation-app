@@ -1,12 +1,13 @@
 import { asyncHandler } from '../utils/asynHandler.js';
 import Hotel from '../models/hotel.model.js';
+import { handleError } from '../utils/createError.js';
 
 // Create Hotel
 const createHotel = asyncHandler(async (req, res) => {
   const newHotel = new Hotel(req.body);
 
   if (!newHotel) {
-    res.status(404).json({ message: 'All fields are required' });
+    res.status(404).json({ message: "Id is required" });
   }
 
   const hotel = await newHotel.save();
