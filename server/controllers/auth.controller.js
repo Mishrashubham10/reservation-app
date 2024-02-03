@@ -1,7 +1,7 @@
 import { asyncHandler } from '../utils/asynHandler.js';
 import User from '../models/user.model.js';
 import bcrypt from 'bcrypt';
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 // REGISTER
 const register = asyncHandler(async (req, res) => {
@@ -32,7 +32,7 @@ const login = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: 'All fields must be filled' });
 
   // find user by username
-  const user = await User.findOne({username}).select("-isAdmin");
+  const user = await User.findOne({ username }).select('-isAdmin');
 
   if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -42,7 +42,27 @@ const login = asyncHandler(async (req, res) => {
   if (!match)
     return res.status(400).json({ message: 'Wrong password or username' });
 
-  res.status(200).json(user);
+  // creating token
+  const token = jwt.sign(
+    {
+      id: user._id,
+      isAdmin: user.isAdmin,
+    },
+    process.env.JWT_SECRET
+  );
+
+  // Cookie options
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  res
+    .status(200)
+    .cookie('access-token', token, {
+      options,
+    })
+    .json(user);
 });
 
 // LOGOUT
