@@ -59,7 +59,7 @@ const login = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .cookie('access-token', token, {
+    .cookie('access_token', token, {
       options,
     })
     .json(user);
