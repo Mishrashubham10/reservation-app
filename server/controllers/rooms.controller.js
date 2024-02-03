@@ -44,11 +44,13 @@ const updateRoom = asyncHandler(async (req, res) => {
 
 // Delete Room
 const deleteRoom = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+    const hotelId = req.params.hotelid;
 
-  if (!id) return res.status(404).json({ message: 'Id is required' });
+  if (!hotelId) return res.status(404).json({ message: 'Id is required' });
 
-  const deletedRoom = await Room.findByIdAndDelete(id);
+  const deletedRoom = await Room.findByIdAndDelete(req.params.id);
+
+  await Hotel.findByIdAndUpdate(hotelId, { $pull: { rooms: req.params.id } });
 
   if (!deletedRoom)
     return res

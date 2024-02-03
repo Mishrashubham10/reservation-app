@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/:hotelid", verifyAdmin, createRoom)
 router.get('/', rooms);
 router.get('/:id', room);
-router.put('/', verifyAdmin, updateRoom);
-router.delete('/', verifyAdmin, deleteRoom);
+router.put('/:id', verifyAdmin, updateRoom);
+router.delete('/:id/:hotelid', verifyAdmin, deleteRoom);
 
 export default router;
