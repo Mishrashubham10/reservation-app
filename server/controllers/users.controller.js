@@ -7,9 +7,13 @@ const updateUser = asyncHandler(async (req, res) => {
 
     if (!id) return res.status(404).json({ message: "Id is required" })
 
-    const user = await User.findByIdAndUpdate({ $set: req.body }, { new: true })
+    const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { $set: req.body },
+        { new: true }
+      );
 
-    res.status(200).json(user);
+    res.status(200).json(updatedUser);
 });
 
 // DELETE User
