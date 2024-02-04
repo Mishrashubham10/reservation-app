@@ -7,7 +7,7 @@ const createHotel = asyncHandler(async (req, res) => {
   const newHotel = new Hotel(req.body);
 
   if (!newHotel) {
-    res.status(404).json({ message: "Id is required" });
+    res.status(404).json({ message: 'Id is required' });
   }
 
   const hotel = await newHotel.save();
@@ -72,4 +72,36 @@ const hotels = asyncHandler(async (req, res) => {
   res.status(200).json(hotels);
 });
 
-export { createHotel, updateHotel, deleteHotel, hotel, hotels };
+// COUNTBYCITY
+const countByCity = asyncHandler(async (req, res) => {
+  const cities = req.query.cities.split(',');
+
+  const list = await Promise.all(
+    cities.map((city) => {
+      return Hotel.countDocuments({ city });
+    })
+  );
+
+  res.status(200).json(list);
+});
+
+// COUNTBYTYPE
+const countByType = asyncHandler(async (req, res) => {
+  const hotels = await Hotel.find();
+
+  if (!hotels) {
+    res.status(404).json({ message: 'Hotel not found' });
+  }
+
+  res.status(200).json(hotels);
+});
+
+export {
+  createHotel,
+  updateHotel,
+  deleteHotel,
+  hotel,
+  hotels,
+  countByCity,
+  countByType,
+};
