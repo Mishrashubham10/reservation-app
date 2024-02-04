@@ -16,19 +16,16 @@ const createHotel = asyncHandler(async (req, res) => {
 
 // UPDATE
 const updateHotel = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    res.status(404).json({ message: 'Id is required' });
+  try {
+    const updatedHotel = await Hotel.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    res.status(200).json(updatedHotel);
+  } catch (err) {
+    next(err);
   }
-
-  const updatedHotel = await Hotel.findByIdAndUpdate(
-    id,
-    { $set: req.body },
-    { new: true }
-  );
-
-  res.status(200).json(updatedHotel);
 });
 
 // DELETE
@@ -62,28 +59,33 @@ const hotel = asyncHandler(async (req, res) => {
 });
 
 // GET ALL
-const hotels = asyncHandler(async (req, res) => {
-  const hotels = await Hotel.find();
-
-  if (!hotels) {
-    res.status(404).json({ message: 'Hotel not found' });
+const hotels = async (req, res, next) => {
+  const { min, max, ...others } = req.query;
+  try {
+    const hotels = await Hotel.find({
+      ...others,
+      cheapestPrice: { $gt: min | 1, $lt: max || 999 },
+    }).limit(req.query.limit);
+    res.status(200).json(hotels);
+  } catch (err) {
+    next(err);
   }
-
-  res.status(200).json(hotels);
-});
+};
 
 // COUNTBYCITY
-const countByCity = asyncHandler(async (req, res) => {
+const countByCity = async (req, res, next) => {
   const cities = req.query.cities.split(',');
-
-  const list = await Promise.all(
-    cities.map((city) => {
-      return Hotel.countDocuments({ city });
-    })
-  );
-
-  res.status(200).json(list);
-});
+  try {
+    const list = await Promise.all(
+      cities.map((city) => {
+        return Hotel.countDocuments({ city: city });
+      })
+    );
+    res.status(200).json(list);
+  } catch (err) {
+    next(err);
+  }
+};
 
 // COUNTBYTYPE
 const countByType = asyncHandler(async (req, res) => {
@@ -94,11 +96,11 @@ const countByType = asyncHandler(async (req, res) => {
   const cabinCount = await Hotel.countDocuments({ type: 'cabin' });
 
   res.status(200).json([
-    {type:"hotel", count: hotelCount},
-    {type:"apartments", count: apartmentCount},
-    {type:"resorts", count: resortCount},
-    {type:"villas", count: villaCount},
-    {type:"cabins", count: cabinCount},
+    { type: 'hotel', count: hotelCount },
+    { type: 'apartments', count: apartmentCount },
+    { type: 'resorts', count: resortCount },
+    { type: 'villas', count: villaCount },
+    { type: 'cabins', count: cabinCount },
   ]);
 });
 

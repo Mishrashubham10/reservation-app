@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-vars */
 import useFetch from '../../hooks/useFetch';
 import './featured.css';
 
 const Featured = () => {
-  const { data, loading, error, reFetch } = useFetch(
+  const { data, loading } = useFetch(
     '/hotels/countByCity?cities=london,delhi,mumbai'
   );
 

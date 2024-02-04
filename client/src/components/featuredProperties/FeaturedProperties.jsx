@@ -1,6 +1,10 @@
+/* eslint-disable no-unused-vars */
+import useFetch from '../../hooks/useFetch';
 import './FeaturedProperties.css';
 
 const FeaturedProperties = () => {
+  const { data, loading } =  useFetch('/hotels/countByType');
+
   return (
     <div className="fp">
       <div className="fpItem">
