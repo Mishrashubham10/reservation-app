@@ -13,12 +13,10 @@ const useFetch = (url) => {
         const res = await axios.get(url);
         setData(res.data);
       } catch (err) {
-        console.log(err);
         setError(err);
       }
       setLoading(false);
     };
-
     fetchData();
   }, [url]);
 
@@ -28,12 +26,12 @@ const useFetch = (url) => {
       const res = await axios.get(url);
       setData(res.data);
     } catch (err) {
-      console.log(err);
       setError(err);
     }
+    setLoading(false);
   };
 
-  return { data, loading, error, reFetch }
+  return { data, loading, error, reFetch };
 };
 
 export default useFetch;
